@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  web-app:
+    #just a fix for a problem introduced with latest version
+    stdin_open: true
+    
+    #same as docker build -f <dockerfile name>
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    #port maping
+    ports:
+      - "3000:3000"
+    #file mapping to local machine
+    volumes:
+      #tells which files within container not to map
+      - /app/node_modules
+      #chooses all files within curret directory to map to container
+      - .:/app
+      
+  tests:
+    stdin_open: true
+    
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    
+    volumes:
+      - /app/node_modules
+      - .:/app
+    
+    command: ["npm","run","test"]
